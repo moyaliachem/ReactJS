@@ -3,21 +3,48 @@ import { connect } from "react-redux";
 import Aux from "../../hoc/Auxillary/Auxillary";
 import Burger from "../../components/Burger/Burger";
 import BuildControls from "../../components/Burger/BuildControls/BuildControls";
-import Modal from "../../components/UI/Modal/Modal";
+// import Modal from "../../components/UI/Modal/Modal";
+import { Modal } from "antd";
+import Button from "../../components/UI/Button/Button";
 import OrderSummary from "../../components/Burger/OrderSummary/OrderSummary";
 import Spinner from "../../components/UI/Spinner/Spinner";
 import withErrorHandler from "../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from "../../store/actions/index";
 import axios from "../../axios-orders";
+import "antd/dist/antd.css";
 
 export class BurgerBuilder extends Component {
   state = {
-    purchasing: false
+    purchasing: false,
+    visible: false
   };
 
   componentDidMount() {
     this.props.onInitIngredients();
   }
+
+  showModal = () => {
+    this.setState({
+      visible: true
+    });
+  };
+
+  handleOk = e => {
+    console.log(e);
+    this.setState({
+      visible: false
+    });
+    this.props.onInitPurchased();
+    this.props.history.push("/checkout");
+  };
+
+  handleCancel = e => {
+    console.log(e);
+    this.setState({
+      visible: false,
+      purchasing: false
+    });
+  };
 
   updatePurchaseState(ingredients) {
     const sum = Object.keys(ingredients)
@@ -39,14 +66,14 @@ export class BurgerBuilder extends Component {
     }
   };
 
-  purchaseCancelHandler = () => {
-    this.setState({ purchasing: false });
-  };
+  // purchaseCancelHandler = () => {
+  //   this.setState({ purchasing: false });
+  // };
 
-  purchaseContinueHandler = () => {
-    this.props.onInitPurchased();
-    this.props.history.push("/checkout");
-  };
+  // purchaseContinueHandler = () => {
+  //   this.props.onInitPurchased();
+  //   this.props.history.push("/checkout");
+  // };
 
   render() {
     const disabledInfo = {
@@ -75,6 +102,7 @@ export class BurgerBuilder extends Component {
             isAuth={this.props.isAuthenticated}
             purchasable={this.updatePurchaseState(this.props.ings)}
             ordered={this.purchaseHandler}
+            modalShow={this.showModal}
           />
         </Aux>
       );
@@ -82,8 +110,8 @@ export class BurgerBuilder extends Component {
         <OrderSummary
           ingredients={this.props.ings}
           price={this.props.price}
-          purchaseCancel={this.purchaseCancelHandler}
-          purchaseContinue={this.purchaseContinueHandler}
+          // purchaseCancel={this.purchaseCancelHandler}
+          // purchaseContinue={this.purchaseContinueHandler}
         />
       );
     }
@@ -91,8 +119,26 @@ export class BurgerBuilder extends Component {
     return (
       <Aux>
         <Modal
+          title="Order Summary"
+          visible={this.state.visible}
           show={this.state.purchasing}
           modalClosed={this.purchaseCancelHandler}
+          footer={[
+            <Button
+              style={{ textAlign: "center" }}
+              btnType="Danger"
+              clicked={this.handleCancel}
+            >
+              Return
+            </Button>,
+            <Button
+              style={{ textAlign: "center" }}
+              btnType="Success"
+              clicked={this.handleOk}
+            >
+              Submit
+            </Button>
+          ]}
         >
           {orderSummary}
         </Modal>

@@ -1,5 +1,6 @@
 import * as actionTypes from "./actionTypes";
 import axios from "axios";
+import { message } from "antd";
 
 export const authStart = () => {
   return {
@@ -8,6 +9,9 @@ export const authStart = () => {
 };
 
 export const authSuccess = (token, userId) => {
+  if (token != null && userId != null) {
+    message.success("Login Successful!");
+  }
   return {
     type: actionTypes.AUTH_SUCCESS,
     idToken: token,
@@ -16,6 +20,7 @@ export const authSuccess = (token, userId) => {
 };
 
 export const authFail = error => {
+  message.error("Email or Password might be wrong! Please try again.");
   return {
     type: actionTypes.AUTH_FAIL,
     error: error

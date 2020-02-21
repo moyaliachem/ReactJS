@@ -9,6 +9,7 @@ import withErrorHandler from "../../../hoc/withErrorHandler/withErrorHandler";
 import * as actions from "../../../store/actions/order";
 import { updateObject, checkValidity } from '../../../shared/utility';
 
+
 class ContactData extends Component {
   state = {
     orderForm: {
@@ -138,6 +139,7 @@ class ContactData extends Component {
   };
 
   render() {
+    let counter = 0;
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
       formElementsArray.push({
@@ -159,7 +161,7 @@ class ContactData extends Component {
             changed={event => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType="Success" disabled={!this.state.formIsValid}>
+        <Button clicked={counter+1} btnType="Success" disabled={!this.state.formIsValid}>
           ORDER
         </Button>
       </form>

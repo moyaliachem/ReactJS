@@ -1,7 +1,11 @@
 import React from "react";
 import classes from "./Input.module.css";
+import { Input, Select, AutoComplete } from "antd";
+import "antd/dist/antd.css";
+
 const input = props => {
   let inputElement = null;
+  const { Option } = AutoComplete;
   const inputClasses = [classes.InputElement];
 
   if (props.invalid && props.shouldValidate && props.touched) {
@@ -10,7 +14,7 @@ const input = props => {
   switch (props.elementType) {
     case "input":
       inputElement = (
-        <input
+        <Input
           className={inputClasses.join(" ")}
           {...props.elementConfig}
           value={props.value}
@@ -30,22 +34,22 @@ const input = props => {
       break;
     case "select":
       inputElement = (
-        <select className={inputClasses.join(" ")} value={props.value}>
+        <Select className={inputClasses.join(" ")} value={props.value}>
           {props.elementConfig.options.map(option => (
-            <option
+            <Option
               key={option.value}
               value={option.value}
               onChange={props.changed}
             >
               {option.displayValue}
-            </option>
+            </Option>
           ))}
-        </select>
+        </Select>
       );
       break;
     default:
       inputElement = (
-        <input
+        <Input
           className={inputClasses.join(" ")}
           {...props.elementConfig}
           value={props.value}
